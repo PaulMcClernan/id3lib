@@ -16,11 +16,8 @@ Paul McClernan
 Date: April 26th 2015
 
 id3lib
-
 Version: 1.0.2
-
 Author: Mark Smith (mark at maseurope.net)
-
 Date: 28th May 2007
 
 Rest in peace Mark. 
