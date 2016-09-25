@@ -1,4 +1,4 @@
-﻿script "id3lib"
+script "id3lib"
 ------------------------------------------------------
 --id3lib
 --version: 1.0.2
@@ -39,7 +39,184 @@ local sBigEndian
 local sBOM
 local sError
 local sIsUnicode
-----
+--------------------------------------------------
+-- These are replacements for what were stored in properties :
+local pngStart 
+local pngEnd
+local jfifStart
+local jfifEnd
+local picTypes23
+local isoLanguageCodes
+local frameDictionary24
+local frameDictionaryM4
+local frameDictionary23
+local frameDictionary22
+local v1Genres
+------------------------
+
+on libraryStack
+   answer "The id3lib command set library is now available."
+   
+   put "√¢PNG" into pngStart
+   put "IEND√ÜB`√á" into pngEnd
+   put "Àá√ø" into jfifStart
+   put "Àá≈∏" into jfifEnd
+   
+   put "0=Other" & cr & "1=32x32 pixels 'file icon' (PNG only),true" & cr & "2=Other file icon,true" & cr & "3=Cover (front)" & cr & "4=Cover (back)" & \
+         cr & "5=Leaflet page" & cr & "6=Media (e.g. lable side of CD)" & cr & "7=Lead artist/lead performer/soloist" & cr & "8=Artist/performer" & \
+         cr & "9=Conductor" & cr & "10=Band/Orchestra" & cr & "11=Composer" & cr & "12=Lyricist/text writer" & cr & "13=Recording Location" & \
+         cr & "14=During recording" & cr & "15=During performance" & cr & "16=Movie/video screen capture" & cr & "17=A bright coloured fish" & \
+         cr & "18=Illustration" & cr & "19=Band/artist logotype" & cr & "20=Publisher/Studio logotype" into picTypes23
+   
+   put  "aar=Afar" & cr & "abk=Abkhazian" & cr & "ace=Achinese" & cr & "ach=Acoli" & cr & "ada=Adangme" & cr & "ady=Adyghe; Adygei" & \
+         cr & "afa=Afro-Asiatic (Other)" & cr & "afh=Afrihili" & cr & "afr=Afrikaans" & cr & "ain=Ainu" & cr & "aka=Akan" & cr & "akk=Akkadian" & \
+         cr & "alb=Albanian" & cr & "ale=Aleut" & cr & "alg=Algonquian languages" & cr & "alt=Southern Altai" & cr & "amh=Amharic" & \
+         cr & "ang=English, Old (ca.450-1100)" & cr & "anp=Angika" & cr & "apa=Apache languages" & cr & "ara=Arabic" & cr & "arc=Aramaic" & \
+         cr & "arg=Aragonese" & cr & "arm=Armenian" & cr & "arn=Araucanian" & cr & "arp=Arapaho" & cr & "art=Artificial (Other)" & cr & "arw=Arawak" & \
+         cr & "asm=Assamese" & cr & "ast=Asturian; Bable" & cr & "ath=Athapascan languages" & cr & "aus=Australian languages" & cr & "ava=Avaric" & \
+         cr & "ave=Avestan" & cr & "awa=Awadhi" & cr & "aym=Aymara" & cr & "aze=Azerbaijani" & cr & "bad=Banda" & cr & "bai=Bamileke languages" & \
+         cr & "bak=Bashkir" & cr & "bal=Baluchi" & cr & "bam=Bambara" & cr & "ban=Balinese" & cr & "baq=Basque" & cr & "bas=Basa" & \
+         cr & "bat=Baltic (Other)" & cr & "bej=Beja" & cr & "bel=Belarusian" & cr & "bem=Bemba" & cr & "ben=Bengali" & cr & "ber=Berber (Other)" & \
+         cr & "bho=Bhojpuri" & cr & "bih=Bihari" & cr & "bik=Bikol" & cr & "bin=Bini" & cr & "bis=Bislama" & cr & "bla=Siksika" & cr & "bnt=Bantu (Other)" & \
+         cr & "bos=Bosnian" & cr & "bra=Braj" & cr & "bre=Breton" & cr & "btk=Batak (Indonesia)" & cr & "bua=Buriat" & cr & "bug=Buginese" & \
+         cr & "bul=Bulgarian" & cr & "bur=Burmese" & cr & "byn=Blin; Bilin" & cr & "cad=Caddo" & cr & "cai=Central American Indian (Other)" &\
+   cr & "car=Carib" & cr & "cat=Catalan; Valencian" & cr & "cau=Caucasian (Other)" & cr & "ceb=Cebuano" & cr & "cel=Celtic (Other)" & \
+         cr & "cha=Chamorro" & cr & "chb=Chibcha" & cr & "che=Chechen" & cr & "chg=Chagatai" & cr & "chi=Chinese" & cr & "chk=Chuukese" & \
+         cr & "chm=Mari" & cr & "chn=Chinook jargon" & cr & "cho=Choctaw" & cr & "chp=Chipewyan" & cr & "chr=Cherokee" & \
+         cr & "chu=Church Slavic; Old Slavonic; Church Slavonic; Old Bulgarian; Old Church Slavonic" & cr & "chv=Chuvash" & cr & "chy=Cheyenne" & \
+         cr & "cmc=Chamic languages" & cr & "cop=Coptic" & cr & "cor=Cornish" & cr & "cos=Corsican" & cr & "cpe=Creoles and pidgins, english-based (Other)" & \
+         cr & "cpf=Creoles and pidgins, french-based (Other)" & cr & "cpp=Creoles and pidgins, Portuguese-based (Other)" & cr & "cre=Cree" & \
+         cr & "crh=Crimean Tatar; Crimean Turkish" & cr & "crp=Creoles and pidgins (Other)" & cr & "csb=Kashubian" & cr & "cus=Cushitic (Other)" & \
+         cr & "cze=Czech" & cr & "dak=Dakota" & cr & "dan=Danish" & cr & "dar=Dargwa" & cr & "day=Dayak" & cr & "del=Delaware" & \
+         cr & "den=Slave (Athapascan)" & cr & "dgr=Dogrib" & cr & "din=Dinka" & cr & "div=Divehi; Dhivehi; Maldivian" & cr & "doi=Dogri" & \
+         cr & "dra=Dravidian (Other)" & cr & "dsb=Lower Sorbian" & cr & "dua=Duala" & cr & "dum=Dutch, Middle (ca.1050-1350)" & cr & "dut=Dutch; Flemish" & \
+         cr & "dyu=Dyula" & cr & "dzo=Dzongkha" & cr & "efi=Efik" & cr & "egy=Egyptian (Ancient)" & cr & "eka=Ekajuk" & cr & "elx=Elamite" & \
+         cr & "eng=English" & cr & "enm=English, Middle (1100-1500)" & cr & "epo=Esperanto" & cr & "est=Estonian" & cr & "ewe=Ewe" & \
+         cr & "ewo=Ewondo" & cr & "fan=Fang" & cr & "fao=Faroese" & cr & "fat=Fanti" & cr & "fij=Fijian" & cr & "fil=Filipino; Pilipino" & \
+         cr & "fin=Finnish" & cr & "fiu=Finno-Ugrian (Other)" & cr & "fon=Fon" & cr & "fre=French" & cr & "frm=French, Middle (ca.1400-1600)" & \
+         cr & "fro=French, Old (842-ca.1400)" & cr & "frr=Northern Frisian" & cr & "frs=Eastern Frisian" & cr & "fry=Western Frisian" & cr & "ful=Fulah" & \
+         cr & "fur=Friulian" & cr & "gaa=Ga" & cr & "gay=Gayo" & cr & "gba=Gbaya" & cr & "gem=Germanic (Other)" & cr & "geo=Georgian" & \
+         cr & "ger=German" & cr & "gez=Geez" & cr & "gil=Gilbertese" & cr & "gla=Gaelic; Scottish Gaelic" & cr & "gle=Irish" & cr & "glg=Galician" & \
+         cr & "glv=Manx" & cr & "gmh=German, Middle High (ca.1050-1500)" & cr & "goh=German, Old High (ca.750-1050)" & cr & "gon=Gondi" & \
+         cr & "gor=Gorontalo" & cr & "got=Gothic" & cr & "grb=Grebo" & cr & "grc=Greek, Ancient (to 1453)" & cr & "gre=Greek, Modern (1453-)" & \
+         cr & "grn=Guarani" & cr & "gsw=Alemani; Swiss German" & cr & "guj=Gujarati" & cr & "gwi=Gwich¬¥in" & cr & "hai=Haida" & cr & "hat=Haitian; Haitian Creole" & \
+         cr & "hau=Hausa" & cr & "haw=Hawaiian" & cr & "heb=Hebrew" & cr & "her=Herero" & cr & "hil=Hiligaynon" & cr & "him=Himachali" & cr & "hin=Hindi" & \
+         cr & "hit=Hittite" & cr & "hmn=Hmong" & cr & "hmo=Hiri Motu" & cr & "hsb=Upper Sorbian" & cr & "hun=Hungarian" & cr & "hup=Hupa" & \
+         cr & "iba=Iban" & cr & "ibo=Igbo" & cr & "ice=Icelandic" & cr & "ido=Ido" & cr & "iii=Sichuan Yi" & cr & "ijo=Ijo" & cr & "iku=Inuktitut" & \
+         cr & "ile=Interlingue" & cr & "ilo=Iloko" & cr & "ina=Interlingua (International Auxiliary Language Association)" & cr & "inc=Indic (Other)" & \
+         cr & "ind=Indonesian" & cr & "ine=Indo-European (Other)" & cr & "inh=Ingush" & cr & "ipk=Inupiaq" & cr & "ira=Iranian (Other)" & \
+         cr & "iro=Iroquoian languages" & cr & "ita=Italian" & cr & "jav=Javanese" & cr & "jbo=Lojban" & cr & "jpn=Japanese" & cr & "jpr=Judeo-Persian" & \
+         cr & "jrb=Judeo-Arabic" & cr & "kaa=Kara-Kalpak" & cr & "kab=Kabyle" & cr & "kac=Kachin" & cr & "kal=Kalaallisut; Greenlandic" & \
+         cr & "kam=Kamba" & cr & "kan=Kannada" & cr & "kar=Karen" & cr & "kas=Kashmiri" & cr & "kau=Kanuri" & cr & "kaw=Kawi" & \
+         cr & "kaz=Kazakh" & cr & "kbd=Kabardian" & cr & "kha=Khasi" & cr & "khi=Khoisan (Other)" & cr & "khm=Khmer" & cr & "kho=Khotanese" & \
+         cr & "kik=Kikuyu; Gikuyu" & cr & "kin=Kinyarwanda" & cr & "kir=Kirghiz" & cr & "kmb=Kimbundu" & cr & "kok=Konkani" & cr & "kom=Komi" & \
+         cr & "kon=Kongo" & cr & "kor=Korean" & cr & "kos=Kosraean" & cr & "kpe=Kpelle" & cr & "krc=Karachay-Balkar" & cr & "krl=Karelian" & \
+         cr & "kro=Kru" & cr & "kru=Kurukh" & cr & "kua=Kuanyama; Kwanyama" & cr & "kum=Kumyk" & cr & "kur=Kurdish" & cr & "kut=Kutenai" & \
+         cr & "lad=Ladino" & cr & "lah=Lahnda" & cr & "lam=Lamba" & cr & "lao=Lao" & cr & "lat=Latin" & cr & "lav=Latvian" & cr & "lez=Lezghian" & \
+         cr & "lim=Limburgan; Limburger; Limburgish" & cr & "lin=Lingala" & cr & "lit=Lithuanian" & cr & "lol=Mongo" & cr & "loz=Lozi" & \
+         cr & "ltz=Luxembourgish; Letzeburgesch" & cr & "lua=Luba-Lulua" & cr & "lub=Luba-Katanga" & cr & "lug=Ganda" & cr & "lui=Luiseno" & \
+         cr & "lun=Lunda" & cr & "luo=Luo (Kenya and Tanzania)" & cr & "lus=lushai" & cr & "mac=Macedonian" & cr & "mad=Madurese" & \
+         cr & "mag=Magahi" & cr & "mah=Marshallese" & cr & "mai=Maithili" & cr & "mak=Makasar" & cr & "mal=Malayalam" & cr & "man=Mandingo" & \
+         cr & "mao=Maori" & cr & "map=Austronesian (Other)" & cr & "mar=Marathi" & cr & "mas=Masai" & cr & "may=Malay" & cr & "mdf=Moksha" & \
+         cr & "mdr=Mandar" & cr & "men=Mende" & cr & "mga=Irish, Middle (900-1200)" & cr & "mic=Mi'kmaq; Micmac" & cr & "min=Minangkabau" & \
+         cr & "mis=Miscellaneous languages" & cr & "mkh=Mon-Khmer (Other)" & cr & "mlg=Malagasy" & cr & "mlt=Maltese" & cr & "mnc=Manchu" & \
+         cr & "mni=Manipuri" & cr & "mno=Manobo languages" & cr & "moh=Mohawk" & cr & "mol=Moldavian" & cr & "mon=Mongolian" & \
+         cr & "mos=Mossi" & cr & "mul=Multiple languages" & cr & "mun=Munda languages" & cr & "mus=Creek" & cr & "mwl=Mirandese" & \
+         cr & "mwr=Marwari" & cr & "myn=Mayan languages" & cr & "myv=Erzya" & cr & "nah=Nahuatl" & cr & "nai=North American Indian" & \
+         cr & "nap=Neapolitan" & cr & "nau=Nauru" & cr & "nav=Navajo; Navaho" & cr & "nbl=Ndebele, South; South Ndebele" & \
+         cr & "nde=Ndebele, North; North Ndebele" & cr & "ndo=Ndonga" & cr & "nds=Low German; Low Saxon; German, Low; Saxon, Low" & \
+         cr & "nep=Nepali" & cr & "new=Nepal Bhasa; Newari" & cr & "nia=Nias" & cr & "nic=Niger-Kordofanian (Other)" & cr & "niu=Niuean" & \
+         cr & "nno=Norwegian Nynorsk" & cr & "nob=Norwegian Bokm√•l" & cr & "nog=Nogai" & cr & "non=Norse, Old" & cr & "nor=Norwegian" & \
+         cr & "nqo=N'ko" & cr & "nso=Northern Sotho; Pedi; Sepedi" & cr & "nub=Nubian languages" & cr & "nwc=Classical Newari; Old Newari; Classical Nepal Bhasa" & \
+         cr & "nya=Chichewa; Chewa; Nyanja" & cr & "nym=Nyamwezi" & cr & "nyn=Nyankole" & cr & "nyo=Nyoro" & cr & "nzi=Nzima" & \
+         cr & "oci=Occitan (post 1500); Proven√ßal" & cr & "oji=Ojibwa" & cr & "ori=Oriya" & cr & "orm=Oromo" & cr & "osa=Osage" & \
+         cr & "oss=Ossetian; Ossetic" & cr & "ota=Turkish, Ottoman (1500-1928)" & cr & "oto=Otomian languages" & cr & "paa=Papuan (Other)" & \
+         cr & "pag=Pangasinan" & cr & "pal=Pahlavi" & cr & "pam=Pampanga" & cr & "pan=Panjabi; Punjabi" & cr & "pap=Papiamento" & cr & "pau=Palauan" & \
+         cr & "peo=Persian, Old (ca.600-400 B.C.)" & cr & "per=Persian" & cr & "phi=Philippine (Other)" & cr & "phn=Phoenician" & cr & "pli=Pali" & \
+         cr & "pol=Polish" & cr & "pon=Pohnpeian" & cr & "por=Portuguese" & cr & "pra=Prakrit languages" & cr & "pro=Proven√ßal, Old (to 1500)" & \
+         cr & "pus=Pushto" & cr & "qaa-qtz =Reserved for local use" & cr & "que=Quechua" & cr & "raj=Rajasthani" & cr & "rap=Rapanui" & cr & "rar=Rarotongan" & \
+         cr & "roa=Romance (Other)" & cr & "roh=Raeto-Romance" & cr & "rom=Romany" & cr & "rum=Romanian" & cr & "run=Rundi" & \
+         cr & "rup=Aromanian; Arumanian; Macedo-Romanian" & cr & "rus=Russian" & cr & "sad=Sandawe" & cr & "sag=Sango" & cr & "sah=Yakut" & \
+         cr & "sai=South American Indian (Other)" & cr & "sal=Salishan languages" & cr & "sam=Samaritan Aramaic" & cr & "san=Sanskrit" & cr & "sas=Sasak" & \
+         cr & "sat=Santali" & cr & "scc=Serbian" & cr & "scn=Sicilian" & cr & "sco=Scots" & cr & "scr=Croatian" & cr & "sel=Selkup" & cr & "sem=Semitic (Other)" & \
+         cr & "sga=Irish, Old (to 900)" & cr & "sgn=Sign Languages" & cr & "shn=Shan" & cr & "sid=Sidamo" & cr & "sin=Sinhala; Sinhalese" & \
+         cr & "sio=Siouan languages" & cr & "sit=Sino-Tibetan (Other)" & cr & "sla=Slavic (Other)" & cr & "slo=Slovak" & cr & "slv=Slovenian" & \
+         cr & "sma=Southern Sami" & cr & "sme=Northern Sami" & cr & "smi=Sami languages (Other)" & cr & "smj=Lule Sami" & cr & "smn=Inari Sami" & \
+         cr & "smo=Samoan" & cr & "sms=Skolt Sami" & cr & "sna=Shona" & cr & "snd=Sindhi" & cr & "snk=Soninke" & cr & "sog=Sogdian" & \
+         cr & "som=Somali" & cr & "son=Songhai" & cr & "sot=Sotho, Southern" & cr & "spa=Spanish; Castilian" & cr & "srd=Sardinian" & cr & "srn=Sranan Togo" & \
+         cr & "srr=Serer" & cr & "ssa=Nilo-Saharan (Other)" & cr & "ssw=Swati" & cr & "suk=Sukuma" & cr & "sun=Sundanese" & cr & "sus=Susu" & \
+         cr & "sux=Sumerian" & cr & "swa=Swahili" & cr & "swe=Swedish" & cr & "syr=Syriac" & cr & "tah=Tahitian" & cr & "tai=Tai (Other)" & cr & "tam=Tamil" & \
+         cr & "tat=Tatar" & cr & "tel=Telugu" & cr & "tem=Timne" & cr & "ter=Tereno" & cr & "tet=Tetum" & cr & "tgk=Tajik" & cr & "tgl=Tagalog" & cr & "tha=Thai" & \
+         cr & "tib=Tibetan" & cr & "tig=Tigre" & cr & "tir=Tigrinya" & cr & "tiv=Tiv" & cr & "tkl=Tokelau" & cr & "tlh=Klingon; tlhIngan-Hol" & cr & "tli=Tlingit" & \
+         cr & "tmh=Tamashek" & cr & "tog=Tonga (Nyasa)" & cr & "ton=Tonga (Tonga Islands)" & cr & "tpi=Tok Pisin" & cr & "tsi=Tsimshian" & cr & "tsn=Tswana" & \
+         cr & "tso=Tsonga" & cr & "tuk=Turkmen" & cr & "tum=Tumbuka" & cr & "tup=Tupi languages" & cr & "tur=Turkish" & cr & "tut=Altaic (Other)" & \
+         cr & "tvl=Tuvalu" & cr & "twi=Twi" & cr & "tyv=Tuvinian" & cr & "udm=Udmurt" & cr & "uga=Ugaritic" & cr & "uig=Uighur; Uyghur" & cr & "ukr=Ukrainian" & \
+         cr & "umb=Umbundu" & cr & "und=Undetermined" & cr & "urd=Urdu" & cr & "uzb=Uzbek" & cr & "vai=Vai" & cr & "ven=Venda" & cr & "vie=Vietnamese" & \
+         cr & "vol=Volap√ºk" & cr & "vot=Votic" & cr & "wak=Wakashan languages" & cr & "wal=Walamo" & cr & "war=Waray" & cr & "was=Washo" & \
+         cr & "wel=Welsh" & cr & "wen=Sorbian languages" & cr & "wln=Walloon" & cr & "wol=Wolof" & cr & "xal=Kalmyk; Oirat" & cr & "xho=Xhosa" & \
+         cr & "yao=Yao" & cr & "yap=Yapese" & cr & "yid=Yiddish" & cr & "yor=Yoruba" & cr & "ypk=Yupik languages" & cr & "zap=Zapotec" & cr & "zen=Zenaga" & \
+         cr & "zha=Zhuang; Chuang" & cr & "znd=Zande" & cr & "zul=Zulu" & cr & "zun=Zuni" & cr & "zxx=No linguistic content" & \
+         cr & "zza=Zaza; Dimili; Dimli; Kirdki; Kirmanjki; Zazaki" into isoLanguageCodes
+   
+   put "AENC=false" & cr & "APIC=false" & cr & "ASPI=true" & cr & "COMM=false" & cr & "COMR=true" & cr & "ENCR=true" & cr & "EQU2=true" & cr & "ETCO=true" & \
+         cr & "GEOB=false" & cr & "GRID=false" & cr & "LINK=false" & cr & "MCDI=true" & cr & "MLLT=true" & cr & "OWNE=true" & cr & "PCNT=true" & \
+         cr & "POPM=false" & cr & "POSS=true" & cr & "PRIV=false" & cr & "RBUF=true" & cr & "RVA2=true" & cr & "RVRB=true" & cr & "SEEK=true" & cr & "SIGN=true" & \
+         cr & "SYLT=false" & cr & "SYTC=true" & cr & "TALB=true" & cr & "TBPM=true" & cr & "TCOM=true" & cr & "TCON=true" & cr & "TCOP=true" & cr & "TDEN=true" & \
+         cr & "TDLY=true" & cr & "TDOR=true" & cr & "TDRC=true,TYER" & cr & "TDRL=true" & cr & "TDTG=true" & cr & "TENC=true" & cr & "TEXT=true" & cr & "TFLT=true" & \
+         cr & "TIPL=true,IPLS" & cr & "TIT1=true" & cr & "TIT2=true" & cr & "TIT3=true" & cr & "TKEY=true" & cr & "TLAN=true" & cr & "TLEN=true" & cr & "TMCL=true,IPLS" & \
+         cr & "TMED=true" & cr & "TMOO=true" & cr & "TOAL=true" & cr & "TOFN=true" & cr & "TOLY=true" & cr & "TOPE=true" & cr & "TOWN=true" & cr & "TPE1=true" & \
+         cr & "TPE2=true" & cr & "TPE3=true" & cr & "TPE4=true" & cr & "TPOS=true" & cr & "TPRO=true" & cr & "TPUB=true" & cr & "TRCK=true" & cr & "TRSN=true" & \
+         cr & "TRSO=true" & cr & "TSOA=true" & cr & "TSOP=true" & cr & "TSOT=true" & cr & "TSRC=true" & cr & "TSSE=true" & cr & "TSST=true" & cr & "TXXX=false" & \
+         cr & "UFID=true" & cr & "USER=true" & cr & "USLT=false" & cr & "WCOM=true" & cr & "WCOP=true" & cr & "WOAF=true" & cr & "WOAR=true" & cr & "WOAS=true" & \
+         cr & "WORS=true" & cr & "WPAY=true" & cr & "WPUB=true" & cr & "WXXX=false" into frameDictionary24
+   
+   put "¬©nam=true,TIT2" & cr & "¬©day=true,TYER" & cr & "¬©ART=true,TPE1" & cr & "aART=true,TPE3" & cr & "¬©wrt=true,TCOM" & cr & "¬©alb=true,TALB" & \
+         cr & "trkn=true,TRCK" & cr & "gnre=true,TCON" & cr & "covr=true,APIC" & cr & "disk=true,TPOS" & cr & "¬©too=true,TENC" & cr & "cprt=true,TCOP" & \
+         cr & "purd=true,purd" & cr & "apID=true,TOWN" & cr & "¬©cmt=true,COMM" & cr & "¬©gen=true,TCON" & cr & "¬©grp=true,TIT1" & cr & "tmpo=true,TBPM" & \
+         cr & "¬©lyr=true,USLT" into frameDictionaryM4
+   
+   put "AENC=false" & cr & "APIC=false" & cr & "COMM=false" & cr & "COMR=true" & cr & "ENCR=true" & cr & "EQUA=true" & cr & "ETCO=true" & cr & "GEOB=false" & \
+         cr & "GRID=false" & cr & "IPLS=true" & cr & "LINK=false" & cr & "MCDI=true" & cr & "MLLT=true" & cr & "OWNE=true" & cr & "PRIV=false" & cr & "PCNT=true" & \
+         cr & "POPM=false" & cr & "POSS=true" & cr & "RBUF=true" & cr & "RVAD=true" & cr & "RVRB=true" & cr & "SYLT=false" & cr & "SYTC=true" & cr & "TALB=true" & \
+         cr & "TBPM=true" & cr & "TCOM=true" & cr & "TCON=true" & cr & "TCOP=true" & cr & "TDAT=true" & cr & "TDLY=true" & cr & "TENC=true" & cr & "TEXT=true" & \
+         cr & "TFLT=true" & cr & "TIME=true" & cr & "TIT1=true" & cr & "TIT2=true" & cr & "TIT3=true" & cr & "TKEY=true" & cr & "TLAN=true" & cr & "TLEN=true" & \
+         cr & "TMED=true" & cr & "TOAL=true" & cr & "TOFN=true" & cr & "TOLY=true" & cr & "TOPE=true" & cr & "TORY=true" & cr & "TOWN=true" & cr & "TPE1=true" & \
+         cr & "TPE2=true" & cr & "TPE3=true" & cr & "TPE4=true" & cr & "TPOS=true" & cr & "TPUB=true" & cr & "TRCK=true" & cr & "TRDA=true" & cr & "TRSN=true" & \
+         cr & "TRSO=true" & cr & "TSIZ=true" & cr & "TSRC=true" & cr & "TSSE=true" & cr & "TYER=true" & cr & "TXXX=false" & cr & "UFID=true" & cr & "USER=true" & \
+         cr & "USLT=true" & cr & "WCOM=true" & cr & "WCOP=true" & cr & "WOAF=true" & cr & "WOAR=true" & cr & "WOAS=true" & cr & "WORS=true" & cr & "WPAY=true" & \
+         cr & "WPUB=true" & cr & "WXXX=false" into frameDictionary23
+   
+   put "BUF=true,RBUF" & cr & "CNT=true,PCNT" & cr & "COM=true,COMM" & cr & "CRA=true,AENC" & cr & "CRM=true," & cr & "EQU=true,EQUA" & cr & "ETC=true,ETCO" & \
+         cr & "GEO=true,GEOB" & cr & "IPL=true,IPLS" & cr & "LNK=true,LINK" & cr & "MCI=true,MCDI" & cr & "MLL=true,MLLT" & cr & "PIC=true,APIC" & cr & "POP=true,POPM" & \
+         cr & "REV=true,RVRB" & cr & "RVA=true,RVAD" & cr & "SLT=true,SYLT" & cr & "STC=true,SYTC" & cr & "TAL=true,TALB" & cr & "TBP=true,TBPM" & cr & "TCM=true,TCOM" & \
+         cr & "TCO=true,TCON" & cr & "TCR=true,TCOP" & cr & "TDA=true,TDAT" & cr & "TDY=true,TDLY" & cr & "TEN=true,TENC" & cr & "TFT=true,TFLT" & cr & "TIM=true,TIME" & \
+         cr & "TKE=true,TKEY" & cr & "TLA=true,TLAN" & cr & "TLE=true,TLEN" & cr & "TMT=true,TMED" & cr & "TOA=true,TOPE" & cr & "TOF=true,TOFN" & cr & "TOL=true,TOLY" & \
+         cr & "TOR=true,TORY" & cr & "TOT=true,TOAL" & cr & "TP1=true,TPE1" & cr & "TP2=true,TPE2" & cr & "TP3=true,TPE3" & cr & "TP4=true,TPE4" & cr & "TPA=true,TPOS" & \
+         cr & "TPB=true,TPUB" & cr & "TRC=true,TSRC" & cr & "TRD=true,TRDA" & cr & "TRK=true,TRCK" & cr & "TSI=true,TSIZ" & cr & "TSS=true,TSSE" & cr & "TT1=true,TIT1" & \
+         cr & "TT2=true,TIT2" & cr & "TT3=true,TIT3" & cr & "TXT=true,TEXT" & cr & "TXX=true,TXXX" & cr & "TYE=true,TYER" & cr & "UFI=true,UFID" & cr & "ULT=true,USLT" & \
+         cr & "WAF=true,WOAF" & cr & "WAR=true,WOAR" & cr & "WAS=true,WOAS" & cr & "WCM=true,WCOM" & cr & "WCP=true,WCOP" & cr & "WPB=true,WPUB" & \
+         cr & "WXX=true,WXXX" into frameDictionary22
+   
+   put "0=Blues" & cr & "1=Classic Rock" & cr & "2=Country" & cr & "3=Dance" & cr & "4=Disco" & cr & "5=Funk" & cr & "6=Grunge" & cr & "7=Hip-Hop" & cr & "8=Jazz" & \
+         cr & "9=Metal" & cr & "10=New Age" & cr & "11=Oldies" & cr & "12=Other" & cr & "13=Pop" & cr & "14=R&B" & cr & "15=Rap" & cr & "16=Reggae" & cr & "17=Rock" & \
+         cr & "18=Techno" & cr & "19=Industrial" & cr & "20=Alternative" & cr & "21=Ska" & cr & "22=Death Metal" & cr & "23=Pranks" & cr & "24=Soundtrack" & cr & "25=Euro-Techno" & \
+         cr & "26=Ambient" & cr & "27=Trip-Hop" & cr & "28=Vocal" & cr & "29=Jazz-Funk" & cr & "30=Fusion" & cr & "31=Trance" & cr & "32=Classical" & cr & "33=Instrumental" & \
+         cr & "34=Acid" & cr & "35=House" & cr & "36=Game" & cr & "37=Sound Clip" & cr & "38=Gospel" & cr & "39=Noise" & cr & "40=AltRock" & cr & "41=Bass" & cr & "42=Soul" & \
+         cr & "43=Punk" & cr & "44=Space" & cr & "45=Meditative" & cr & "46=Instrumental Pop" & cr & "47=Instrumental Rock" & cr & "48=Ethnic" & cr & "49=Gothic" & \
+         cr & "50=Darkwave" & cr & "51=Techno-Industrial" & cr & "52=Electronic" & cr & "53=Pop-Folk" & cr & "54=Eurodance" & cr & "55=Dream" & cr & "56=Southern Rock" & \
+         cr & "57=Comedy" & cr & "58=Cult" & cr & "59=Gangsta" & cr & "60=Top 40" & cr & "61=Christian Rap" & cr & "62=Pop-Funk" & cr & "63=Jungle" & cr & "64=Native American" & \
+         cr & "65=Cabaret" & cr & "66=New Wave" & cr & "67=Psychedelic" & cr & "68=Rave" & cr & "69=Showtunes" & cr & "70=Trailer" & cr & "71=Lo-Fi" & cr & "72=Tribal" & \
+         cr & "73=Acid Punk" & cr & "74=Acid Jazz" & cr & "75=Polka" & cr & "76=Retro" & cr & "77=Musical" & cr & "78=Rock & Roll" & cr & "79=Hard Rock" & cr & "80=Folk" & \
+         cr & "81=Folk-Rock" & cr & "82=National Folk" & cr & "83=Swing" & cr & "84=Fast Fusion" & cr & "85=Bebop" & cr & "86=Latin" & cr & "87=Revival" & cr & "88=Celtic" & \
+         cr & "89=Bluegrass" & cr & "90=Avantgarde" & cr & "91=Gothic Rock" & cr & "92=Progressive Rock" & cr & "93=Psychedelic Rock" & cr & "94=Symphonic Rock" & \
+         cr & "95=Slow Rock" & cr & "96=Big Band" & cr & "97=Chorus" & cr & "98=Easy Listening" & cr & "99=Acoustic" & cr & "100=Humour" & cr & "101=Speech" & \
+         cr & "102=Chanson" & cr & "103=Opera" & cr & "104=Chamber Music" & cr & "105=Sonata" & cr & "106=Symphony" & cr & "107=Booty Bass" & cr & "108=Primus" & \
+         cr & "109=Porn Groove" & cr & "110=Satire" & cr & "111=Slow Jam" & cr & "112=Club" & cr & "113=Tango" & cr & "114=Samba" & cr & "115=Folklore" & cr & "116=Ballad" & \
+         cr & "117=Power Ballad" & cr & "118=Rhythmic Soul" & cr & "119=Freestyle" & cr & "120=Duet" & cr & "121=Punk Rock" & cr & "122=Drum Solo" & cr & "123=Acapella" & \
+         cr & "124=Euro-House" & cr & "125=Dance Hall" into v1Genres
+   
+end libraryStack
+
 
 function getFrameArray
   return sFrameArray
@@ -119,32 +296,32 @@ on i3setFile pFile
   set the itemdelimiter to "/"
   put item -1 of pFile into sFileName
    
-  put the picTypes23 of me into sPicTypes
+  put picTypes23 into sPicTypes
   split sPicTypes by cr and "="
    
   switch tType
   case 22
-    put the frameDictionary22 of me into sFrameDict
+    put frameDictionary22 into sFrameDict
     split sFrameDict by cr and "="
     i3readTag22 pFile
     break
   case 23
-    put the frameDictionary23 of me into sFrameDict
+    put frameDictionary23 into sFrameDict
     split sFrameDict by cr and "="
     i3readTag23 pFile
     break
   case 24
-    put the frameDictionary24 of me into sFrameDict
+    put frameDictionary24 into sFrameDict
     split sFrameDict by cr and "="
     i3readTag24 pFile
     break
   case 11
-    put the frameDictionary23 of me into sFrameDict
+    put frameDictionary23 into sFrameDict
     split sFrameDict by cr and "="
     i3readTag11 pFile
     break
   case M4
-    put the frameDictionaryM4 of me into sFrameDict
+    put frameDictionaryM4 into sFrameDict
     split sFrameDict by cr and "="
     i3readTagM4 pFile 
     break
@@ -153,7 +330,7 @@ on i3setFile pFile
    
   i3makeFrameIndex
   i3calcFrameDataSize
-  put the frameDictionary23 of me into sFrameDict
+  put frameDictionary23 into sFrameDict
   split sFrameDict by cr and "="
    
 end i3setFile
@@ -499,7 +676,7 @@ end i3getOneFrame23
 function i3checkSyncSafeSize pOffset,pSize
   put pOffset + 10 + pSize into stChar
   put byte stChar to stChar + 3 of sTagData into tNextID
-  if tNextID is in the frameDictionary24 of me then return pSize
+  if tNextID is in frameDictionary24 then return pSize
   if byte 1 of tNextID is null then return pSize
   return i3getUint(byte pOffset+4 to pOffset+7 of sTagData)
 end i3checkSyncSafeSize
@@ -690,14 +867,14 @@ on i3checkPic
    
    put empty into tEndString
    if "jpeg" is in sFrameArray[sFrameNum,"mimetype"] then
-      if byte -2 to -1 of sFrameArray[sFrameNum,"picdata"] is not the jfifEnd of me then 
-         put the jfifEnd of me into tEndString
-         put the jfifStart of me into tStartString
+      if byte -2 to -1 of sFrameArray[sFrameNum,"picdata"] is not jfifEnd then 
+         put jfifEnd into tEndString
+         put jfifStart into tStartString
       end if
    else if "png" is in sFrameArray[sFrameNum,"mimetype"] then
-      if byte -8 to -1 of sFrameArray[sFrameNum,"picdata"] is not the pngEnd of me then 
-         put the pngEnd of me into tEndString
-         put the pngStart of me into tStartString
+      if byte -8 to -1 of sFrameArray[sFrameNum,"picdata"] is not pngEnd then 
+         put pngEnd into tEndString
+         put pngStart into tStartString
       end if
    end if
    
@@ -981,13 +1158,13 @@ function i3decodeM4 pContent,pID
     put byte 5 to 6 of pContent into num2
     return i3getUint(num1)  & "/" & i3getUint(num2)
     break
-  case "©lyr"
+  case "¬©lyr"
     if "Mac" is in the platform then replace numtochar(13) with cr in pContent
     put pContent into sFrameArray[sFrameNum,"text"]
     put "?" into sFrameArray[sFrameNum,"language"]
     return "?" & ":" & byte 1 to 21 of pContent & "..."
     break
-  case "©cmt"
+  case "¬©cmt"
     put "?" into sFrameArray[sFrameNum,"language"]
     put empty into sFrameArray[sFrameNum,"description"]
     put pContent into sFrameArray[sFrameNum,"comment"]
@@ -1003,9 +1180,9 @@ end i3decodeM4
 
 function i3readCovrFrameM4 @pContent
    put byte 1 to 64 of pContent into p64 -- put char 1 to 256 of pContent into p64 -- this function is not finding some images
-   if the jfifStart of me is in p64 or "JFIF" is in p64 or "Exif" is in p64 then -- or "ÿØÿè" is in p64 then --  ÿØÿè = the 'magic number'
+   if jfifStart is in p64 or "JFIF" is in p64 or "Exif" is in p64 then -- or "√ø√ò√ø√®" is in p64 then --  √ø√ò√ø√® = the 'magic number'
       put "image/jpeg" into tMimeType
-   else if the pngStart of me is in p64 or "PNG" is in p64 then
+   else if pngStart is in p64 or "PNG" is in p64 then
       put "image/png" into tMimeType
    else
       put "image/?" into tMimeType
@@ -1202,7 +1379,7 @@ end i3getTagFlags
 --iso language codes
 
 function id3_isoToLang pIsoCode
-  put the isoLanguageCodes of me into tCodes
+  put isoLanguageCodes into tCodes
   split tCodes by cr and "="
   get tCodes[pIsoCode]
   if it is empty then
@@ -1216,7 +1393,7 @@ end id3_isoToLang
 
 function id3_langToIso pLang
   set the itemdelimiter to "="
-  repeat for each line L in the isoLanguageCodes of me
+  repeat for each line L in isoLanguageCodes
     if pLang is item 2 of L then return item 1 of L
   end repeat
   return "XXX"
@@ -1225,7 +1402,7 @@ end id3_langToIso
 --==--==--==--==--==--==--
 
 function id3_getIsoLanguageCodes
-  return the isoLanguageCodes of me
+  return isoLanguageCodes
 end id3_getIsoLanguageCodes
 
 --==--==--==--==--==--==--
@@ -1234,14 +1411,14 @@ end id3_getIsoLanguageCodes
 
 function id3_numToV1genre pNum
   set the itemdelimiter to "="
-  return PT_U8(item 2 of line pNum + 1 of the v1Genres of me)
+  return PT_U8(item 2 of line pNum + 1 of v1Genres)
 end id3_numToV1genre
 
 --==--==--==--==--==--==--
 
 function id3_v1GenreToNum pGenre
   set the itemdelimiter to "="
-  repeat for each line L in the v1Genres of me
+  repeat for each line L in v1Genres
     if item 2 of L is pGenre then return item 1 of L
   end repeat
   return empty
@@ -1251,7 +1428,7 @@ end id3_v1GenreToNum
 
 function id3_getGenreList
   set the itemdelimiter to "="
-  repeat for each line L in the v1Genres of me
+  repeat for each line L in v1Genres
     put item 2 of L & cr after tList
   end repeat
   return byte 1 to -2 of tList
@@ -1335,7 +1512,7 @@ end i3writeTag23
 --==--==--==--==--==--==--
 
 function i3orderFramesForWrite
-  put the frameDictionary23 of me into tDict
+  put frameDictionary23 into tDict
   set the itemdelimiter to "="
   repeat for each line L in tDict
     put item 1 of L & cr after tFrameList
@@ -1805,8 +1982,8 @@ end id3_getPictureDataByType
 
 
 on id3_setPictureFromImageText pImageText, pId3Type, pDesc, pMimeType
-   if byte 1 to 2 of tImageText is the jfifStart of me then put "jpeg" into pMimeType
-   if byte 1 to 8 of tImageText is the pngStart of me then put "png" into pMimeType
+   if byte 1 to 2 of tImageText is jfifStart then put "jpeg" into pMimeType
+   if byte 1 to 8 of tImageText is pngStart then put "png" into pMimeType
 end id3_setPictureFromImageText
 
 on id3_setPictureFromFile pImageFile, pId3Type, pDesc, pMimeType
@@ -1959,9 +2136,9 @@ end extractJPEGfromAnyFile
 function extractPNGfromAnyFile pTheFile --takes filepath & returns image data of the first PNG image found embedded in the file (if any)
   if there is a file pTheFile then
     open file pTheFile for binary read
-    read from file pTheFile until "âPNG"
-    read from file pTheFile until "IENDÆB`Ç"
-    put "âPNG" &  it & "IENDÆB`Ç" into tPNGData
+    read from file pTheFile until "√¢PNG"
+    read from file pTheFile until "IEND√ÜB`√á"
+    put "√¢PNG" &  it & "IEND√ÜB`√á" into tPNGData
     --    set the text of image "Extracted Image" to tJPEGData
     close file pTheFile 
     if tPNGData is not empty then
