@@ -4,7 +4,7 @@ LiveCode script library for reading id3 tags (originally by Mark Smith) <br>
 id3lib <br>
 Version: 1.0.3 <br>
 
-Unfortunately the original author of this library stack, Mark Smith, died in 2009. He did some really nice work!
+Unfortunately the original author of this library stack, Mark Smith, died in 2012. He did some really nice work!
 I've only made a few minor changes in an effort to keep his library up to date with newer verions of LiveCode 
 (use 'byte' instead of 'char' for example) and to work around some improperly encoded ID3 tags (unicode 'year' frames for example) that I've encountered while using the lib. 
 There are still bugs and functionality missing. Writing picture frames is broken and/or unfinished as well,
