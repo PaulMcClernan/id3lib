@@ -2,7 +2,7 @@
 LiveCode script library for reading id3 tags (originally by Mark Smith) <br>
 
 id3lib <br>
-Version: 1.0.3 <br>
+Version: 1.0.4b <br>
 
 Unfortunately the original author of this library stack, Mark Smith, died in 2012. He did some really nice work!
 I've only made a few minor changes in an effort to keep his library up to date with newer verions of LiveCode 
