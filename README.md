@@ -1,5 +1,5 @@
-# LiveCode id3lib Script Library
-LiveCode script library for reading id3 tags (originally by Mark Smith) <br>
+# OpenXTalk id3lib Script Library
+A script library for reading id3 tags (originally by Mark Smith) <br>
 
 id3lib <br>
 Version: 1.0.4b <br>
